@@ -1,0 +1,52 @@
+<nav class="navbar px-2 md:px-8 justify-between bg-primary text-primary-content fixed top-0 z-10">
+
+    <div class="navbar-start">
+        <a hx-swap="transition:true" class="btn btn-ghost text-base md:text-xl" href="/">
+            <img src="/assets/img/rust_ferris_logo.svg" alt="App Logo" class="w-6 md:w-8">
+            &nbsp;&nbsp;Todo List
+        </a>
+    </div>
+
+    {% if from_protected %}
+
+    <div class="navbar-end w-3/5 gap-6 px-2 md:px-8">
+        <span class="text-sm md:text-lg font-bold text-indigo-700">
+            {{ username }}
+        </span>
+        <a hx-swap="transition:true" class="btn btn-ghost text-base md:text-lg p-0 mx-0" href="/todo/list">
+            Tasks
+        </a>
+        <button hx-swap="transition:true" hx-post="/todo/logout" hx-confirm="Are you sure you want to log out?" onClick="this.addEventListener('htmx:confirm', (e) => {
+						e.preventDefault()
+						Swal.fire({
+							title: `${e.detail.question}`,
+							icon: 'question',
+							background: '#1D232A',
+							color: '#A6ADBA',
+							showCancelButton: true,
+							confirmButtonColor: '#3085d6',
+							cancelButtonColor: '#d33'
+						}).then((result) => {
+							if(result.isConfirmed) e.detail.issueRequest(true);
+						})
+					})" hx-target="body" hx-push-url="true" class="btn btn-ghost text-sm md:text-lg p-0 mx-0">
+            <img src="/assets/img/logout_icon.svg" alt="logout icon">
+            &nbsp;Logout
+        </button>
+    </div>
+
+    {% else %}
+
+    <div class="navbar-end w-2/5 justify-end items-center">
+        <a hx-swap="transition:true" class="btn btn-ghost text-sm md:text-lg mr-2 md:mr-8" href="/register">
+            <img class="w-4 md:w-6" src="/assets/img/signup_icon.svg" alt="signup icon">
+            &nbsp;Register
+        </a>
+        <a hx-swap="transition:true" class="btn btn-ghost text-sm md:text-lg" href="/login">
+            <img class="w-4 md:w-6" src="/assets/img/login_icon.svg" alt="login icon">
+            &nbsp;Login
+        </a>
+    </div>
+
+    {% endif %}
+</nav>

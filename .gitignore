@@ -1,0 +1,8 @@
+/target
+tailwind/node_modules
+
+assets/css/main.css
+
+# Ignore SQLite files
+sqlite.*
+# .env

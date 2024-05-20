@@ -1,0 +1,74 @@
+{% if !is_error %}
+
+<div id="modal" _="on closeModal add .closing then wait for animationend then remove me">
+    <div class="modal-underlay" _="on click trigger closeModal"></div>
+    <div class="modal-content">
+        <h3 class="text-xl font-bold text-center">
+            Update Task #{{ todo.id }}
+        </h3>
+        <form class="flex flex-col justify-center gap-6 mt-4">
+            <label class="flex flex-col justify-start gap-2">
+                Title:
+                <input class="input input-bordered input-primary bg-slate-800" type="text" name="title"
+                    value="{{ todo.title}}" required autofocus minlength="3" maxlength="64" />
+            </label>
+            <label class="flex flex-col justify-start gap-2">
+                Description:
+                <textarea class="textarea textarea-primary h-20 max-h-20 bg-slate-800" name="description"
+                    maxlength="255" required>{{ todo.description }}</textarea>
+            </label>
+            <footer class="card-actions flex flex-col">
+                <div class="flex justify-between w-full">
+                    <label class="cursor-pointer label flex gap-2">
+                        <span class="label-text">Status:</span>
+                        <input type="checkbox" class="checkbox checkbox-accent" name="status" {% if todo.status %}
+                            checked {% endif %} />
+                    </label>
+                    <p class="text-[10px] md:text-sm flex gap-2 items-center">
+                        Created At:
+                        <span class="text-[10px] md:text-base font-bold text-secondary">
+                            {{ datetime }}
+                        </span>
+                    </p>
+                </div>
+                <div class="flex justify-end mt-4 w-full">
+                    <button hx-patch="/edit/{{ todo.id }}" hx-target="body" hx-swap="transition:true"
+                        _="on click trigger closeModal" class="badge badge-accent py-3 badge-outline hover:scale-[1.1]">
+                        &#10004;&nbsp;Update Todo
+                    </button>
+                </div>
+            </footer>
+        </form>
+    </div>
+</div>
+
+{% else %}
+
+<div id="modal" _="on closeModal add .closing then wait for animationend then remove me">
+    <div class="modal-underlay" _="on click trigger closeModal"></div>
+    <div class="modal-content">
+        <div class="items-center justify-center flex flex-col gap-4">
+            <h1 class="text-9xl font-extrabold text-gray-700 tracking-widest">
+                404
+            </h1>
+            <h2 class="bg-rose-700 px-2 text-sm rounded rotate-[20deg] absolute">
+                Resource not found
+            </h2>
+        </div>
+        <p class="text-xs text-center md:text-sm text-gray-400">
+            The requested resource could not be resolved.
+        </p>
+
+        <p class="text-xs text-secondary font-semibold text-wrap text-center w-fit mx-auto mb-8">
+            Reason: {{ reason }}
+        </p>
+
+        <div class="flex justify-center w-full mt-14">
+            <a href="/todo/list" hx-swap="transition:true" class="btn btn-secondary btn-outline w-fit mx-auto">
+                Go Todo List Page
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endif %}

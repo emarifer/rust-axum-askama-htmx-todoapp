@@ -1,0 +1,31 @@
+{% if messages != "" %}
+
+{% if messages_status == "Success" %}
+
+<div role="alert"
+    class="flex gap-1 md:gap-3 justify-center alert alert-success w-72 md:w-fit md:min-w-[384px] mx-auto mt-4 md:mt-12 p-1 md:p-6">
+    <img class="w-5 md:w-7" src="/assets/img/check_mark.svg" alt="check mark">
+
+    <span class="text-[10px] md:text-base text-wrap">{{ messages }}</span>
+
+    <button class="text-3xl font-black" _="on click remove the closest <div/>">
+        ×
+    </button>
+</div>
+
+{% else %}
+
+<div role="alert"
+    class="flex gap-1 md:gap-3 justify-center alert alert-error w-72 md:w-fit md:min-w-[384px] mx-auto mt-4 md:mt-12 p-1 md:p-6">
+    <img class="w-5 md:w-8" src="/assets/img/error_mark.svg" alt="error mark">
+
+    <span class="text-[10px] md:text-base text-wrap">{{ messages }}</span>
+
+    <button class="text-3xl font-black" _="on click remove the closest <div/>">
+        ×
+    </button>
+</div>
+
+{% endif %}
+
+{% endif %}

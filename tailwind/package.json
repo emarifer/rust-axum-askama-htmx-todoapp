@@ -1,0 +1,17 @@
+{
+  "name": "rust-axum-askama-htmx",
+  "version": "0.1.0",
+  "description": "Rust/Axum+Askama+Htmx: Full stack application using Rust's Axum framework & Askama templating language with user auth management (JWT) + CRUD to a SQLite database (To Do List) and HTMX in the frontend",
+  "main": "index.js",
+  "scripts": {
+    "watch-css": "npx tailwindcss -i base.css -o ../assets/css/main.css --watch",
+    "build-css-prod": "npx tailwindcss -i base.css -o ../assets/css/main.css --minify"
+  },
+  "keywords": [],
+  "author": "emarifer",
+  "license": "GPL-3.0-only",
+  "devDependencies": {
+    "daisyui": "^4.10.2",
+    "tailwindcss": "^3.4.3"
+  }
+}

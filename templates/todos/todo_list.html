@@ -1,0 +1,45 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+
+<div class="flex justify-between max-w-[340px] mx-auto md:max-w-2xl border-b border-b-slate-600 mb-8 pb-2">
+    <h1 class="text-lg md:text-2xl font-bold text-center">
+        {{ title_page }}
+    </h1>
+    <a class="text-sm md:text-base badge badge-info px-4 py-3 cursor-pointer hover:scale-[1.1]" hx-get="/todo/create"
+        hx-target="body" hx-swap="beforeend">
+        <img class="w-3 md:w-5" src="/assets/img/add_todo_icon.svg" alt="Add Todo icon">
+        &nbsp;&nbsp;&nbsp;New
+    </a>
+</div>
+<section
+    class="overflow-auto max-w-[340px] mx-auto md:max-w-2xl max-h-60 md:max-h-96 bg-slate-600 rounded-lg shadow-xl">
+    <table class="table table-zebra">
+        <!-- head -->
+        <thead class="bg-slate-700">
+            <tr class="text-[10px] md:text-sm">
+                <th></th>
+                <th>Tasks</th>
+                <th>Status</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        {% if todos.len() != 0 %}
+        <tbody>
+            {% for todo in todos %}
+            {% include "partials/todo_item_list.html" %}
+            {% endfor %}
+        </tbody>
+        {% else %}
+        <tbody>
+            <tr class="text-[10px] md:text-sm">
+                <td colspan="4" align="center">
+                    You do not have anything to do
+                </td>
+            </tr>
+        </tbody>
+        {% endif %}
+    </table>
+</section>
+
+{% endblock content %}
