@@ -82,13 +82,14 @@ $ sqlx database create # generates the DB
 $ sqlx migrate run # generates migrations. (`sqlx migrate revert` to reverse migrations)
 ```
 
-Before compiling the binary, you will have to regenerate the CSS. To do this, go to the `tailwind` folder and run the following (you must have `Node.js` installed):
+Before compiling the binary, you will need to regenerate the CSS. First, you have to install the dependencies required by `Tailwind CSS` and `daisyUI` (you have to have `Node.js` installed on your system) and then run the regeneration of the `main.css` file. To do this, apply the following commands:
 
 ```
-$ cd tailwind && npm run build-css-prod
+$ cd tailwind && npm i
+$ npm run build-css-prod
 ```
 
-Build the binary file and run it with the command:
+Build the binary file and run it with the command (in proyect root):
 
 ```
 $ cargo build --release && ./target/release/rust-axum-askama-htmx # Ctrl + C to stop the application
