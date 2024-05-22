@@ -228,7 +228,6 @@ pub async fn handler_404(session: Session) -> impl IntoResponse {
         title: "Error 404".to_string(),
         reason: "Nothing to see here".to_string(),
         link,
-        // from_protected,
         is_error: true,
         ..Default::default()
     })

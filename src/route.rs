@@ -83,21 +83,23 @@ fn create_router(app_state: Arc<RwLock<AppState>>) -> Router {
                 .route_layer(from_fn_with_state(app_state.clone(), auth_middleware)),
         )
         .route(
-            "/todo/logout",
+            "/logout",
             post(logout_handler)
                 .route_layer(from_fn_with_state(app_state.clone(), auth_middleware)),
         )
         .route(
-            "/todo/create",
+            "/create",
             get(todo_create_handler)
                 .post(todo_add_handler)
                 .route_layer(from_fn_with_state(app_state.clone(), auth_middleware)),
         )
         .route(
-            "/edit/:id",
-            get(todo_edit_handler).patch(todo_patch_handler),
+            "/edit",
+            get(todo_edit_handler)
+                .post(todo_patch_handler)
+                .route_layer(from_fn_with_state(app_state.clone(), auth_middleware)),
         )
-        .route("/todo/delete/:id", delete(todo_delete_handler))
+        .route("/delete", delete(todo_delete_handler))
         .route("/healthchecker", get(health_checker_handler))
         .nest_service(
             "/assets",

@@ -51,13 +51,13 @@ In the implementation of this application we have used the following technologie
 
 <img src="assets/img/screenshot-01.png" width="30%" align="top">&nbsp;&nbsp;<img src="assets/img/screenshot-02.png" width="30%" align="top">&nbsp;&nbsp;<img src="assets/img/screenshot-03.png" width="30%" align="top">
 
-###### Modal Task Update Dialog, Confirm Dialog, and unknown path or resource not found page (Error 404):
+###### Modal Task Update Dialog, Confirm Dialog (with con `SweetAlert2`), and unknown path or resource not found page (Error 404):
 
 <img src="assets/img/screenshot-04.png" width="30%" align="top">&nbsp;&nbsp;<img src="assets/img/screenshot-05.png" width="30%" align="top">&nbsp;&nbsp;<img src="assets/img/screenshot-06.png" width="30%" align="top">
 
-###### Error page 401 (Status Unauthorized) and task update modal dialog showing that the resource is no longer in the DB:
+###### Error page 401 (Status Unauthorized), task update modal dialog showing that the resource is no longer in the DB and Error page 400 (Bad Request) which indicates that the creation/update of the task needs at least the title:
 
-<img src="assets/img/screenshot-07.png" width="30%" align="top">&nbsp;&nbsp;<img src="assets/img/screenshot-08.png" width="30%" align="top">
+<img src="assets/img/screenshot-07.png" width="30%" align="top">&nbsp;&nbsp;<img src="assets/img/screenshot-08.png" width="30%" align="top">&nbsp;&nbsp;<img src="assets/img/screenshot-09.png" width="30%" align="top">
 
 </div>
 
@@ -99,8 +99,11 @@ $ cargo build --release && ./target/release/rust-axum-askama-htmx # Ctrl + C to 
 If what you want is to edit the code, it will be more convenient to activate hot reload:
 
 ```
-$ cargo watch -x run -w src -w assets -w templates
+$ cargo watch -x run # files/folders contained in .gitignore will be ignored
 ```
+
+>[!NOTE]
+>***If you are editing the code and you are logged into the application in the browser, when the hot reload occurs when saving, since some global flags (such as `from_protected` and `time_zone`) are stored in a session (in memory) they will be lost and you will need to log in again.***
 
 If you also want to modify the CSS of the templates, it will be useful to activate the `watch` mode of Tailwindcss, executing the command inside the `tailwind` folder (you need to have `Node.js` installed):
 

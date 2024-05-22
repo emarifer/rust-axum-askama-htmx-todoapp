@@ -57,5 +57,5 @@ pub struct TodoSchema {
 pub struct TodoEditSchema {
     pub title: String,
     pub description: String,
-    pub status: String,
+    pub hidden: String,
 }

@@ -192,6 +192,19 @@ struct TodoUpdateModalTemplate {
     reason: String,
 }
 
+/// Error 400 page template
+#[derive(Default, Template)]
+#[template(path = "error/error_400.html")]
+struct Error400Template {
+    title: String,
+    username: String,
+    reason: String,
+    messages_status: String,
+    messages: String,
+    from_protected: bool,
+    is_error: bool,
+}
+
 /// Error 401 page template
 #[derive(Default, Template)]
 #[template(path = "error/error_401.html")]

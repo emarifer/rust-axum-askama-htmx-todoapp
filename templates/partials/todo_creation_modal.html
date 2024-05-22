@@ -4,18 +4,18 @@
         <h3 class="text-xl font-bold text-center">
             Enter Task
         </h3>
-        <form action="/todo/create" method="post" hx-target="body" hx-swap="transition:true"
+        <form action="/create" method="post" hx-target="body" hx-swap="transition:true" hx-push-url="false"
             class="flex flex-col justify-center gap-6 mt-4">
 
             <label class="flex flex-col justify-start gap-2">
                 Title:
-                <input class="input input-bordered input-primary bg-slate-800" type="text" name="title" required
-                    autofocus minlength="3" maxlength="64" />
+                <input class="input input-bordered input-primary bg-slate-800" type="text" name="title" autofocus
+                    maxlength="64" />
             </label>
             <label class="flex flex-col justify-start gap-2">
                 Description:
                 <textarea class="textarea textarea-primary h-20 max-h-20 bg-slate-800" name="description"
-                    maxlength="255" required></textarea>
+                    maxlength="255"></textarea>
             </label>
 
             <div class="flex justify-end mt-6">

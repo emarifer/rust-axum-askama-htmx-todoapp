@@ -10,11 +10,11 @@
     </td>
     <td class="flex justify-center gap-2">
         <a class="text-xs md:text-sm badge badge-primary p-3 md:p-4 hover:scale-[1.1] cursor-pointer"
-            hx-get="/edit/{{ todo.id }}" hx-target="body" hx-swap="beforeend">
+            hx-get="/edit?id={{ todo.id }}" hx-target="body" hx-swap="beforeend">
             <img class="w-4 md:w-5" src="/assets/img/edit_icon.svg" alt="edit icon">
             &nbsp;&nbsp;&nbsp;Edit
         </a>
-        <button hx-swap="transition:true" hx-delete="/todo/delete/{{ todo.id }}"
+        <button hx-swap="transition:true" hx-delete="/delete?id={{ todo.id }}"
             hx-confirm="Are you sure you want to delete the task with ID #{{ todo.id }}?" onClick="this.addEventListener('htmx:confirm', (e) => {
                     e.preventDefault()
                     Swal.fire({

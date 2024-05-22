@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use askama::filters::capitalize;
 use axum::{
-    extract::{Path, State},
+    extract::{Query, State},
     response::{IntoResponse, Redirect},
     Extension, Form,
 };
@@ -18,10 +18,16 @@ use crate::{
 };
 
 use super::{
-    convert_datetime, get_messages, Error404Template, Error500Template, HtmlTemplate,
-    TodoCreationModalTemplate, TodoListTemplate, TodoUpdateModalTemplate, FROM_PROTECTED_KEY,
-    TZONE_KEY,
+    convert_datetime, get_messages, Error400Template, Error404Template, Error500Template,
+    HtmlTemplate, TodoCreationModalTemplate, TodoListTemplate, TodoUpdateModalTemplate,
+    FROM_PROTECTED_KEY, TZONE_KEY,
 };
+
+/// Struct for holding the todo_id (i64) that comes in query params.
+#[derive(Debug, Deserialize)]
+pub struct QueryParams {
+    pub id: i64,
+}
 
 /// Handler to serve the Todo List Page template.
 pub async fn todo_list_handler(
@@ -68,11 +74,20 @@ pub async fn todo_create_handler() -> impl IntoResponse {
 /// Handle the `POST` request to create a new Todo.
 pub async fn todo_add_handler(
     Extension(user): Extension<User>,
-    // session: Session,
     messages: Messages,
     State(state): State<Arc<RwLock<AppState>>>,
     Form(form_data): Form<TodoSchema>,
 ) -> impl IntoResponse {
+    if form_data.title.trim() == "" {
+        return HtmlTemplate(Error400Template {
+            title: "Error 400".to_string(),
+            reason: "You must enter at least one title for the Todo".to_string(),
+            is_error: true,
+            ..Default::default()
+        })
+        .into_response();
+    }
+
     let lock = state.read().await;
 
     match add_todo(user.id, form_data.title, form_data.description, &lock.pool).await {
@@ -97,18 +112,14 @@ pub async fn todo_add_handler(
     }
 }
 
-#[derive(Deserialize)]
-pub struct ItemId {
-    pub todo_id: usize,
-}
-
 /// Handler to show the Todo Edit Modal template.
 pub async fn todo_edit_handler(
-    Path(id): Path<i64>,
+    Query(QueryParams { id }): Query<QueryParams>,
     session: Session,
     State(state): State<Arc<RwLock<AppState>>>,
 ) -> impl IntoResponse {
     let lock = state.read().await;
+
     let result = get_todo_by_id(id, &lock.pool).await;
     drop(lock);
 
@@ -135,26 +146,29 @@ pub async fn todo_edit_handler(
     })
 }
 
-/// Handle the `PATCH` request to edit a Todo.
+/// Handle the `POST` (`PATCH`) request to edit a Todo.
 pub async fn todo_patch_handler(
-    Path(id): Path<i64>,
-    // session: Session,
+    Query(QueryParams { id }): Query<QueryParams>,
     messages: Messages,
     State(state): State<Arc<RwLock<AppState>>>,
     Form(form_data): Form<TodoEditSchema>,
 ) -> impl IntoResponse {
-    let lock = state.read().await;
+    if form_data.title.trim() == "" {
+        return HtmlTemplate(Error400Template {
+            title: "Error 400".to_string(),
+            reason: "You must enter at least one title for the Todo".to_string(),
+            is_error: true,
+            ..Default::default()
+        })
+        .into_response();
+    }
 
-    let status = if form_data.status == "on".to_string() {
-        true
-    } else {
-        false
-    };
+    let lock = state.read().await;
 
     let result = update_todo(
         form_data.title.clone(),
         form_data.description.clone(),
-        status,
+        form_data.hidden.parse::<bool>().unwrap_or_default(),
         id,
         &lock.pool,
     )
@@ -178,7 +192,7 @@ pub async fn todo_patch_handler(
     let index = lock.todos.iter().position(|item| item.id == id).unwrap();
     lock.todos[index].title = form_data.title;
     lock.todos[index].description = form_data.description;
-    lock.todos[index].status = status;
+    lock.todos[index].status = form_data.hidden.parse::<bool>().unwrap_or_default();
     drop(lock);
 
     messages.success("Task successfully updated!!");
@@ -188,21 +202,22 @@ pub async fn todo_patch_handler(
 
 /// Handle the `DELETE` request to remove a Todo.
 pub async fn todo_delete_handler(
-    Path(todo_id): Path<i64>,
+    Query(QueryParams { id }): Query<QueryParams>,
     messages: Messages,
     State(state): State<Arc<RwLock<AppState>>>,
 ) -> impl IntoResponse {
     let lock = state.read().await;
-    match remove_todo(todo_id, &lock.pool).await {
+
+    match remove_todo(id, &lock.pool).await {
         Ok(_) => {
             drop(lock);
             let mut lock = state.write().await;
-            lock.todos.retain(|item| item.id != todo_id);
+            lock.todos.retain(|item| item.id != id);
             // lock.todos = lock
             //     .todos
             //     .clone()
             //     .into_iter()
-            //     .filter(|item| item.id != todo_id)
+            //     .filter(|item| item.id != id)
             //     .collect();
             drop(lock);
 
@@ -213,7 +228,7 @@ pub async fn todo_delete_handler(
         Err(e) => {
             drop(lock);
             let mut lock = state.write().await;
-            lock.todos.retain(|item| item.id != todo_id);
+            lock.todos.retain(|item| item.id != id);
             drop(lock);
 
             HtmlTemplate(Error404Template {
@@ -227,6 +242,20 @@ pub async fn todo_delete_handler(
         }
     }
 }
+
+/* REFERENCES 22-05-2024:
+https://www.youtube.com/@_noisecode/videos
+https://dev.to/pongsakornsemsuwan/rust-axum-extracting-query-param-of-vec-4pdm
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox
+https://www.google.com/search?q=askama+how+get+checkbox&oq=askama+how+get+che&aqs=chrome.1.69i57j33i160l5.12476j0j4&sourceid=chrome&ie=UTF-8
+
+https://github.com/yarox/todomvc
+*/
+
+/* REFERENCES 21-05-2024:
+https://github.com/yarox/todomvc/blob/main/templates/components/todo/item.html
+https://medium.com/intelliconnect-engineering/step-by-step-guide-to-test-driven-development-tdd-in-rust-axum-5bef05fd7366
+*/
 
 /* REFERENCES 16-05-2024:
 https://github.com/tokio-rs/axum/discussions/629

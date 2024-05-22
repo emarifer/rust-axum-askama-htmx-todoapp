@@ -16,7 +16,7 @@
         <a hx-swap="transition:true" class="btn btn-ghost text-base md:text-lg p-0 mx-0" href="/todo/list">
             Tasks
         </a>
-        <button hx-swap="transition:true" hx-post="/todo/logout" hx-confirm="Are you sure you want to log out?" onClick="this.addEventListener('htmx:confirm', (e) => {
+        <button hx-swap="transition:true" hx-post="/logout" hx-confirm="Are you sure you want to log out?" onClick="this.addEventListener('htmx:confirm', (e) => {
 						e.preventDefault()
 						Swal.fire({
 							title: `${e.detail.question}`,
