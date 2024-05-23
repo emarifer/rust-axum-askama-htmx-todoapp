@@ -146,7 +146,7 @@ pub async fn todo_edit_handler(
     })
 }
 
-/// Handle the `POST` (`PATCH`) request to edit a Todo.
+/// Handle the `PATCH` request to edit a Todo.
 pub async fn todo_patch_handler(
     Query(QueryParams { id }): Query<QueryParams>,
     messages: Messages,
@@ -168,7 +168,7 @@ pub async fn todo_patch_handler(
     let result = update_todo(
         form_data.title.clone(),
         form_data.description.clone(),
-        form_data.hidden.parse::<bool>().unwrap_or_default(),
+        form_data.status,
         id,
         &lock.pool,
     )
@@ -192,7 +192,7 @@ pub async fn todo_patch_handler(
     let index = lock.todos.iter().position(|item| item.id == id).unwrap();
     lock.todos[index].title = form_data.title;
     lock.todos[index].description = form_data.description;
-    lock.todos[index].status = form_data.hidden.parse::<bool>().unwrap_or_default();
+    lock.todos[index].status = form_data.status;
     drop(lock);
 
     messages.success("Task successfully updated!!");

@@ -96,7 +96,7 @@ fn create_router(app_state: Arc<RwLock<AppState>>) -> Router {
         .route(
             "/edit",
             get(todo_edit_handler)
-                .post(todo_patch_handler)
+                .patch(todo_patch_handler)
                 .route_layer(from_fn_with_state(app_state.clone(), auth_middleware)),
         )
         .route("/delete", delete(todo_delete_handler))

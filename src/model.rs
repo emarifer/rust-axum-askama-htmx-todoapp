@@ -2,6 +2,8 @@ use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
+use crate::serialization::{deserialize_checkbox, false_fn};
+
 /// Struct to read/write user data in the pool.
 #[derive(Debug, Default, Clone, Deserialize, FromRow, Serialize)]
 pub struct User {
@@ -57,5 +59,7 @@ pub struct TodoSchema {
 pub struct TodoEditSchema {
     pub title: String,
     pub description: String,
-    pub hidden: String,
+    #[serde(default = "false_fn")]
+    #[serde(deserialize_with = "deserialize_checkbox")]
+    pub status: bool,
 }

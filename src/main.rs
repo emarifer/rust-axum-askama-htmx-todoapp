@@ -3,6 +3,7 @@ mod db;
 mod handler;
 mod model;
 mod route;
+mod serialization;
 mod service;
 
 use std::sync::Arc;

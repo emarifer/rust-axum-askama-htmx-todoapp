@@ -6,8 +6,7 @@
         <h3 class="text-xl font-bold text-center">
             Update Task #{{ todo.id }}
         </h3>
-        <form action="/edit?id={{ todo.id }}" method="post" hx-target="body" hx-swap="transition:true"
-            hx-push-url="false" class="flex flex-col justify-center gap-6 mt-4">
+        <form class="flex flex-col justify-center gap-6 mt-4">
             <label class="flex flex-col justify-start gap-2">
                 Title:
                 <input class="input input-bordered input-primary bg-slate-800" type="text" name="title"
@@ -22,9 +21,8 @@
                 <div class="flex justify-between w-full">
                     <label class="cursor-pointer label flex gap-2">
                         <span class="label-text">Status:</span>
-                        <input type="checkbox" class="checkbox checkbox-accent" id="status" {% if todo.status %} checked
-                            {% endif %} />
-                        <input type="hidden" name="hidden" id="hidden" />
+                        <input type="checkbox" name="status" class="checkbox checkbox-accent" {% if todo.status %}
+                            checked {% endif %} />
                     </label>
                     <p class="text-[10px] md:text-sm flex gap-2 items-center">
                         Created At:
@@ -34,7 +32,8 @@
                     </p>
                 </div>
                 <div class="flex justify-end mt-4 w-full">
-                    <button _="on click call getValue() then trigger closeModal"
+                    <button hx-patch="/edit?id={{ todo.id }}" hx-target="body" hx-swap="transition:true"
+                        hx-push-url="false" _="on click trigger closeModal"
                         class="badge badge-accent py-3 badge-outline hover:scale-[1.1]">
                         &#10004;&nbsp;Update Todo
                     </button>
@@ -43,13 +42,6 @@
         </form>
     </div>
 </div>
-
-<script type="text/javascript" language="javascript">
-    function getValue() {
-        let checkedValue = document.getElementById("status").checked;
-        document.getElementById("hidden").value = checkedValue;
-    }
-</script>
 
 {% else %}
 
